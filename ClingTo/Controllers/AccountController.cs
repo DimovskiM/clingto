@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using ClingTo.Models;
+using System.Collections.Generic;
 
 namespace ClingTo.Controllers
 {
@@ -17,6 +18,7 @@ namespace ClingTo.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private ApplicationDbContext _dbContext = new ApplicationDbContext();
 
         public AccountController()
         {
@@ -152,9 +154,28 @@ namespace ClingTo.Controllers
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+
+                user.Customer = new Customer
+                {
+                    Uid = Guid.Parse(user.Id),
+                    Email = model.Email,
+                    Carts = new List<Cart>()
+                    {
+                        new Cart
+                        {
+                            TotalPrice = 0m,
+                            Products = new List<Product>(),
+                            Uid = Guid.NewGuid()
+                        }
+                    }
+                };
+
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    _dbContext.Customers.Add(user.Customer);
+                    _dbContext.SaveChanges();
+
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
@@ -422,7 +443,6 @@ namespace ClingTo.Controllers
 
             base.Dispose(disposing);
         }
-
         #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";

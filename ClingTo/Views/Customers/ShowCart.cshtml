@@ -1,0 +1,46 @@
+﻿@model ClingTo.Models.Cart
+@using System.Linq;
+@{
+    ViewBag.Title = "ShowCart";
+}
+
+<div class="container">
+    @if (@ViewBag.Cart.Products.Count > 0)
+    {
+        <table class="table">
+            <thead>
+                Total Number of Items : @ViewBag.Cart.Products.Count
+                <tr class="row row-space-top-2">
+                    <td class="col-md-3">
+                        Image
+                    </td>
+                    <td class="col-md-5">
+                        Product Name
+                    </td>
+                    <td class="col-md-4">
+                        Product Price
+                    </td>
+                </tr>
+            </thead>
+            @foreach (var product in ViewBag.Cart.Products)
+            {
+                <tr class="row row-space-top-2">
+                    <td class="col-md-3">
+                        <img src="@product.ImageUrl" style="height: 20%" />
+                    </td>
+                    <td class="col-md-5">@product.Name</td>
+                    <td class="col-md-4">@product.Price</td>
+                </tr>
+            }
+
+        </table>
+    <label>Total Price:<b>@ViewBag.Cart.TotalPrice</b></label>
+    <div class="btn btn-default">
+        @Html.ActionLink("Complete order", "ConfirmOrder", "Customers", new { cartUid = @ViewBag.Cart.Uid }, null)
+    </div>
+        } else {
+            <h1 class="page-header">There are no products in your cart</h1>
+        }
+
+    </div>
+

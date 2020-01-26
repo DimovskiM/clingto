@@ -1,31 +1,74 @@
-﻿@{
+﻿
+@model PagedList.IPagedList<ClingTo.Models.Product>
+@using PagedList.Mvc;
+@{
     ViewBag.Title = "Home Page";
 }
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" /> 
 
 <div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+    <h1>ClingTo</h1>
+    <p class="lead">Welcome to the #1 Site for Custom Designed Clothes and Apparel</a></p>
 </div>
 
 <div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
+
+@using (Html.BeginForm("Index", "Home", FormMethod.Get))
+{
+    <p>
+        Find by name: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        <input type="submit" value="search" class="btn btn-default" /> <br />
+    </p>
+        }
+    <p>
+        Order By @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.TitleSortParam, currentFilter = ViewBag.CurrentFilter }) | @Html.ActionLink("Price", "Index", new { sortOrder = ViewBag.PriceSortParam, currentFilter = ViewBag.CurrentFilter })
+    </p>
+    @if(User.IsInRole("Designer"))
+    {
         <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
+            <div class="btn btn-default">
+                @Html.ActionLink("Add New Product", "Create", "Products")
+            </div>
         </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+
+    }
+    <table class="table">
+        <tbody>
+            @foreach (var product in Model)
+            {
+                <div class="col-md-4 panel">
+                    <div class="panel-body">
+                        <img class="img-rounded" style="height: 50%; width: 50%;" src="@product.ImageUrl" />
+                        <h2 class="panel-heading">@product.Name</h2>
+                        <p>@product.Description</p>
+                        <p>Price: @product.Price</p>
+                        <div class="btn btn-default">
+                            @Html.ActionLink("Add To Cart", "AddToCart", "Customers", new { productUid = product.Uid }, null)
+                        </div>
+                        @if (User.IsInRole("Designer"))
+                        {
+                            <div class="btn btn-default">
+                                @Html.ActionLink("Delete", "Delete", "Products", new { id = product.Id }, null)
+                            </div>
+                            <div class="btn btn-default">
+                                @Html.ActionLink("Edit", "Edit", "Products", new { id = product.Id}, null)
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            @if (Model.Count <= 0)
+            {
+                <div class="col-md-12">
+                    <h1 class="page-header">No items</h1>
+                </div>
+            }
+        </tbody>
+        
+    </table>
+    <div>
+        @Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+        
     </div>
 </div>
