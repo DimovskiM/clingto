@@ -14,7 +14,7 @@ using System.Collections.Generic;
 namespace ClingTo.Controllers
 {
     [Authorize]
-    public class AccountController : Controller
+    public partial class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
@@ -155,11 +155,15 @@ namespace ClingTo.Controllers
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
 
-                user.Customer = new Customer
+              
+                var result = await UserManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
                 {
-                    Uid = Guid.Parse(user.Id),
-                    Email = model.Email,
-                    Carts = new List<Cart>()
+                    user.Customer = new Customer
+                    {
+                        Uid = Guid.Parse(user.Id),
+                        Email = model.Email,
+                        Carts = new List<Cart>()
                     {
                         new Cart
                         {
@@ -168,11 +172,10 @@ namespace ClingTo.Controllers
                             Uid = Guid.NewGuid()
                         }
                     }
-                };
+                    };
 
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
+                    UserManager.AddToRole(user.Id, "Customer");
+
                     _dbContext.Customers.Add(user.Customer);
                     _dbContext.SaveChanges();
 

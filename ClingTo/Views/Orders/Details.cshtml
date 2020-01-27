@@ -7,20 +7,39 @@
 <h2>Details</h2>
 
 <div>
-    <h4>Order</h4>
+    <h4>Order @Html.DisplayFor(model => model.Id)</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Uid)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Uid)
-        </dd>
-
-    </dl>
+    <table class="table">
+        <th>
+            Item Image
+        </th>
+        <th>
+            Item Name
+        </th>
+        <th>
+            Item Price
+        </th>
+        <tbody>
+            @foreach (var item in Model.Cart.Products)
+            {
+                <tr>
+                    <td>
+                        <img src="@item.ImageUrl" style="height: 20%"/>
+                    </td>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        @item.Price.ToString()
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <h4 class="pull-right">
+        Total Price : @Model.Cart.TotalPrice
+    </h4>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back", "Index")
 </p>

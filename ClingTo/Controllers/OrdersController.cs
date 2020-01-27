@@ -12,7 +12,7 @@ using Microsoft.AspNet.Identity;
 
 namespace ClingTo.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Administrator, Customer")]
     public class OrdersController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -24,7 +24,6 @@ namespace ClingTo.Controllers
             {
                  return View(db.Orders.ToList());
             }
-
 
             ApplicationUserManager _userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
             var user = _userManager.FindByName(User.Identity.GetUserName());
@@ -43,7 +42,7 @@ namespace ClingTo.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Order order = db.Orders.Find(id);
+            Order order = db.Orders.Include(x => x.Cart.Products).FirstOrDefault(x => x.Id == id);
             if (order == null)
             {
                 return HttpNotFound();
@@ -66,6 +65,8 @@ namespace ClingTo.Controllers
         {
             if (ModelState.IsValid)
             {
+                order.Uid = Guid.NewGuid();
+
                 db.Orders.Add(order);
                 db.SaveChanges();
                 return RedirectToAction("Index");

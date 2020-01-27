@@ -204,6 +204,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CustomAccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\CustomersController.cs" />
@@ -245,8 +246,17 @@
     <Compile Include="Migrations\202001261902488_v7.Designer.cs">
       <DependentUpon>202001261902488_v7.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001271755463_v8.cs" />
+    <Compile Include="Migrations\202001271755463_v8.Designer.cs">
+      <DependentUpon>202001271755463_v8.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202001271824070_v9.cs" />
+    <Compile Include="Migrations\202001271824070_v9.Designer.cs">
+      <DependentUpon>202001271824070_v9.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AddUserToRole.cs" />
     <Compile Include="Models\BaseEntity.cs" />
     <Compile Include="Models\Cart.cs" />
     <Compile Include="Models\Customer.cs" />
@@ -254,7 +264,6 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\Product.cs" />
-    <Compile Include="Models\ProductSize.cs" />
     <Compile Include="Models\Request.cs" />
     <Compile Include="Models\UserRole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -276,11 +285,9 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\Orders\Create.cshtml" />
-    <Content Include="Views\Orders\Delete.cshtml" />
     <Content Include="Views\Orders\Details.cshtml" />
-    <Content Include="Views\Orders\Edit.cshtml" />
     <Content Include="Views\Orders\Index.cshtml" />
+    <Content Include="Views\Account\AddUserToRole.cshtml" />
     <None Include="Views\Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Views\Scripts\jquery-1.10.2.js" />
     <Content Include="Views\Scripts\jquery-1.10.2.min.js" />
@@ -374,6 +381,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001261902488_v7.resx">
       <DependentUpon>202001261902488_v7.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001271755463_v8.resx">
+      <DependentUpon>202001271755463_v8.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001271824070_v9.resx">
+      <DependentUpon>202001271824070_v9.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

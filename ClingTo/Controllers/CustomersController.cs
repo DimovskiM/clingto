@@ -31,11 +31,11 @@ namespace ClingTo.Controllers
             Guid userId;
             Guid.TryParse(user.Id, out userId);
 
-            Customer customer = _dbContext.Customers.Where(x => x.Uid == userId).SingleOrDefault();
+            Customer customer = _dbContext.Customers.Where(x => x.Uid == userId).FirstOrDefault();
 
-            Cart cart = customer.Carts.OrderByDescending(x => x.Id).SingleOrDefault();
+            Cart cart = customer.Carts.OrderByDescending(x => x.Id).FirstOrDefault();
 
-            Product product = _dbContext.Products.Where(x => x.Uid == productUid).SingleOrDefault();
+            Product product = _dbContext.Products.Where(x => x.Uid == productUid).FirstOrDefault();
 
             if (product == null)
             {
@@ -59,9 +59,9 @@ namespace ClingTo.Controllers
             Guid userId;
             Guid.TryParse(user.Id, out userId);
 
-            Customer customer = _dbContext.Customers.Where(x => x.Uid == userId).SingleOrDefault();
+            Customer customer = _dbContext.Customers.Where(x => x.Uid == userId).FirstOrDefault();
 
-            Cart cart = customer.Carts.OrderByDescending(x => x.Id).SingleOrDefault();
+            Cart cart = customer.Carts.OrderByDescending(x => x.Id).FirstOrDefault();
 
             ViewBag.Cart = cart;
 
@@ -77,7 +77,7 @@ namespace ClingTo.Controllers
             Guid userId;
             Guid.TryParse(user.Id, out userId);
 
-            Customer customer = _dbContext.Customers.Where(x => x.Uid == userId).SingleOrDefault();
+            Customer customer = _dbContext.Customers.Where(x => x.Uid == userId).FirstOrDefault();
 
             return View(customer);
         }
@@ -107,12 +107,13 @@ namespace ClingTo.Controllers
             Guid userId;
             Guid.TryParse(user.Id, out userId);
 
-            Customer customer = _dbContext.Customers.Where(x => x.Uid == userId).SingleOrDefault();
+            Customer customer = _dbContext.Customers.Where(x => x.Uid == userId).FirstOrDefault();
 
-            Cart cart = _dbContext.Carts.Where(x => x.Uid == cartUid).SingleOrDefault();
+            Cart cart = _dbContext.Carts.Where(x => x.Uid == cartUid).FirstOrDefault();
 
             customer.Orders.Add(new Order
             {
+                CompletedOn = DateTime.Now,
                 Uid = Guid.NewGuid(),
                 Customer = customer,
                 Cart = cart,

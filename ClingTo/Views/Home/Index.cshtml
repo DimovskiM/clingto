@@ -42,9 +42,12 @@
                         <h2 class="panel-heading">@product.Name</h2>
                         <p>@product.Description</p>
                         <p>Price: @product.Price</p>
-                        <div class="btn btn-default">
-                            @Html.ActionLink("Add To Cart", "AddToCart", "Customers", new { productUid = product.Uid }, null)
-                        </div>
+                        @if (User.IsInRole("Customer"))
+                        {
+                            <div class="btn btn-default">
+                                @Html.ActionLink("Add To Cart", "AddToCart", "Customers", new { productUid = product.Uid }, null)
+                            </div>
+                        }
                         @if (User.IsInRole("Designer"))
                         {
                             <div class="btn btn-default">

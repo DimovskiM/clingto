@@ -10,7 +10,12 @@
             @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
         </li>
         <li>@Html.ActionLink("Cart", "ShowCart", "Customers")</li>
+        <li>@Html.ActionLink("Orders", "Index", "Orders")</li>
         <li>@Html.ActionLink("Profile", "CustomerDetails", "Customers")</li>
+        @if (User.IsInRole("Administrator"))
+        {
+            <li>@Html.ActionLink("Add User To Role", "AddUserToRole", "Account")</li>
+        }
         <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
     </ul>
     }

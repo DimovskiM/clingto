@@ -22,7 +22,7 @@ namespace ClingTo.Controllers
         {
             if (User.IsInRole("Designer") || User.IsInRole("Administrator"))
             {
-                return View(db.Requests.ToList());
+                return View(db.Requests.Include(x => x.Customer).ToList());
 
             }
 
@@ -43,7 +43,7 @@ namespace ClingTo.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Request request = db.Requests.Find(id);
+            Request request = db.Requests.Include(x => x.Customer).FirstOrDefault(x => x.Id == id);
             if (request == null)
             {
                 return HttpNotFound();
@@ -68,7 +68,16 @@ namespace ClingTo.Controllers
         {
             if (ModelState.IsValid)
             {
+                ApplicationUserManager _userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                var user = _userManager.FindByName(User.Identity.GetUserName());
+                Guid userId;
+                Guid.TryParse(user.Id, out userId);
+
+                Customer customer = db.Customers.Where(x => x.Uid == userId).FirstOrDefault();
+
                 request.Uid = Guid.NewGuid();
+
+                request.Customer = customer;
 
                 db.Requests.Add(request);
                 db.SaveChanges();
@@ -86,7 +95,7 @@ namespace ClingTo.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Request request = db.Requests.Find(id);
+            Request request = db.Requests.Include(x => x.Customer).FirstOrDefault(x => x.Id == id);
             if (request == null)
             {
                 return HttpNotFound();
@@ -104,6 +113,15 @@ namespace ClingTo.Controllers
         {
             if (ModelState.IsValid)
             {
+                ApplicationUserManager _userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                var user = _userManager.FindByName(User.Identity.GetUserName());
+                Guid userId;
+                Guid.TryParse(user.Id, out userId);
+
+                Customer customer = db.Customers.Where(x => x.Uid == userId).FirstOrDefault();
+
+                request.Customer = customer;
+
                 db.Entry(request).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");

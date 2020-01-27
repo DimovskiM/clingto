@@ -20,13 +20,7 @@ namespace ClingTo.Models
         public decimal Price { get; set; }
 
         [Required]
-        public int Quantity { get; set; }
-
-        [Required]
         [Url]
         public string ImageUrl { get; set; }
-
-        [Required]
-        public ProductSize Size { get; set; }
     }
 }

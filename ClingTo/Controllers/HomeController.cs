@@ -29,33 +29,33 @@ namespace ClingTo.Controllers
 
             ViewBag.CurrentFilter = searchString;
 
-            var products = _dbContext.Products.AsQueryable();
+            var products = _dbContext.Products.ToList();
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                products = products.Where(x => x.Name.Contains(searchString));
+                products = products.Where(x => x.Name.Contains(searchString)).ToList();
             }
 
             switch (sortOrder)
             {
                 case "title_desc":
-                    products.OrderByDescending(x => x.Name);
+                    products = products.OrderByDescending(x => x.Name).ToList();
                     break;
                 case "price_desc":
-                    products.OrderByDescending(x => x.Price);
+                    products = products.OrderByDescending(x => x.Price).ToList();
                     break;
                 case "Price":
-                    products.OrderBy(x => x.Price);
+                    products = products.OrderBy(x => x.Price).ToList();
                     break;
                 default:
-                    products.OrderBy(x => x.Name);
+                    products = products.OrderBy(x => x.Name).ToList();
                     break;
             }
 
-            int pageSize = 3;
+            int pageSize = 5;
             int pageNumber = page ?? 1;
 
-            return View(products.ToArray().ToPagedList(pageNumber, pageSize));
+            return View(products.ToPagedList(pageNumber, pageSize));
         }
 
         public ActionResult About()
