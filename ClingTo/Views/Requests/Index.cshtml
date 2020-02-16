@@ -10,6 +10,7 @@
 {
     <p>
         @Html.ActionLink("Create New", "Create")
+
     </p>
 }
 
@@ -19,7 +20,7 @@
             @Html.DisplayNameFor(model => model.Description)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.ReferenceImage)
+            Reference Image
         </th>
         @if(User.IsInRole("Designer") || User.IsInRole("Administrator"))
         {
@@ -50,8 +51,8 @@
             @if (User.IsInRole("Customer"))
             {
 
-                @Html.ActionLink("Edit", "Edit", new { id=item.Id }) 
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) 
+                @Html.ActionLink("Edit", "Edit", new { id=item.Id })  <br/>
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) <br/>
                 @Html.ActionLink("Delete", "Delete", new { id = item.Id })
             }
             else {

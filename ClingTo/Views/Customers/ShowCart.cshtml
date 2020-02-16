@@ -36,7 +36,7 @@
         </table>
     <label>Total Price:<b>@ViewBag.Cart.TotalPrice</b></label>
     <div class="btn btn-default">
-        @Html.ActionLink("Complete order", "ConfirmOrder", "Customers", new { cartUid = @ViewBag.Cart.Uid }, null)
+        @Html.ActionLink("Pay", "Charge", "Customers", new { cartUid = @ViewBag.Cart.Uid }, null)
     </div>
         } else {
             <h1 class="page-header">There are no products in your cart</h1>

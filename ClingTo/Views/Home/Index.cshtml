@@ -32,29 +32,29 @@
         </p>
 
     }
-    <table class="table">
-        <tbody>
+    <div class="css-table">
+        <div class="grid-container">
             @foreach (var product in Model)
             {
-                <div class="col-md-4 panel">
-                    <div class="panel-body">
-                        <img class="img-rounded" style="height: 50%; width: 50%;" src="@product.ImageUrl" />
+                <div class="flex-container">
+                        <div class="arrt" style="background-image: url(@product.ImageUrl)"></div>
                         <h2 class="panel-heading">@product.Name</h2>
+                    <div class="content">
                         <p>@product.Description</p>
                         <p>Price: @product.Price</p>
                         @if (User.IsInRole("Customer"))
                         {
-                            <div class="btn btn-default">
+                            <div style="display: block" class="btn btn-default">
                                 @Html.ActionLink("Add To Cart", "AddToCart", "Customers", new { productUid = product.Uid }, null)
                             </div>
                         }
                         @if (User.IsInRole("Designer"))
                         {
-                            <div class="btn btn-default">
+                            <div style="display: block" class="btn btn-default">
                                 @Html.ActionLink("Delete", "Delete", "Products", new { id = product.Id }, null)
                             </div>
-                            <div class="btn btn-default">
-                                @Html.ActionLink("Edit", "Edit", "Products", new { id = product.Id}, null)
+                            <div style="display: block" class="btn btn-default">
+                                @Html.ActionLink("Edit", "Edit", "Products", new { id = product.Id }, null)
                             </div>
                         }
                     </div>
@@ -66,12 +66,36 @@
                     <h1 class="page-header">No items</h1>
                 </div>
             }
-        </tbody>
+        </div>
         
-    </table>
+    </div>
     <div>
         @Html.PagedListPager(Model, page => Url.Action("Index",
     new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
         
     </div>
 </div>
+
+<style>
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        column-gap: 20px;
+    }
+    .arrt {
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        width: 100%;
+        height: 200px;
+    }
+
+    .flex-container {
+        display: flex;
+        flex-direction: column;
+        background-color: whitesmoke;
+    }
+    .content {
+        padding: 20px;
+    }
+</style>

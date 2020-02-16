@@ -27,7 +27,7 @@ namespace ClingTo.Controllers
                 throw new HttpException(404, "There is no user with email: " + model.Email);
 
             UserManager.AddToRole(user.Id, model.selectedRole);
-            return RedirectToAction("Index", "Clients");
+            return RedirectToAction("Index", "Home");
         }
     }
 }

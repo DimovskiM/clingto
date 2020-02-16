@@ -1,0 +1,150 @@
+﻿@model ClingTo.Models.StripeChargeModel
+@{
+    ViewBag.Title = "Charge";
+}
+
+<h2>Pay</h2>
+
+<div>
+    <h4>Confirm Order</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            <label for="txtCardNumber">Card Number *</label>
+        </dt>
+
+        <dd>
+            <input type="text" name="CardNumber" id="txtCardNumber" placeholder="Card Number e.g 1234..." /> <br/>
+        </dd>
+
+        <dt>
+            <label for="txtCvc">Cvc *</label>
+        </dt>
+
+        <dd>
+            <input type="text" name="Cvc" id="txtCvc" placeholder="Security Code e.g 987" /> <br />
+        </dd>
+
+        <dt>
+            <label for="txtExpiryMonth">Expiry Month (MM) *</label>
+        </dt>
+
+        <dd>
+            <input type="text" name="ExpiryMonth" id="txtExpiryMonth" placeholder="@{DateTime.UtcNow.Month.ToString();}" /> <br />
+        </dd>
+
+        <dt>
+            <label for="txtExpiryYear">Expiry Year (YYYY) *</label>)
+        </dt>
+
+        <dd>
+            <input type="text" name="ExpiryYear" id="txtExpiryYear" placeholder="@{DateTime.UtcNow.Year.ToString();}" /> <br />
+        </dd>
+    </dl>
+</div>
+@using (Html.BeginForm("Charge", "Customers", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "frmCharge" }))
+{
+    @Html.AntiForgeryToken()
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CardHolderName)
+        </dt>
+
+        <dd>
+            @Html.TextBoxFor(model => model.CardHolderName, new { id = "txtCardHolderName" }) <br />
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AddressLine1)
+        </dt>
+
+        <dd>
+            @Html.TextBoxFor(model => model.AddressLine1, new { id = "txtAddress1" }) <br />
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AddressLine2)
+        </dt>
+
+        <dd>
+            @Html.TextBoxFor(model => model.AddressLine2, new { id = "txtAddress2" }) <br />
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AddressCity)
+        </dt>
+
+        <dd>
+            @Html.TextBoxFor(model => model.AddressCity, new { id = "txtCity" })
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AddressPostcode)
+        </dt>
+
+        <dd>
+            @Html.TextBoxFor(model => model.AddressPostcode, new { id = "txtPostcode" }) <br />
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AddressCountry)
+        </dt>
+
+        <dd>
+            @Html.TextBoxFor(model => model.AddressCountry, new { id = "txtCountry" }) <br/>
+        </dd>
+
+        <dt >
+            @Html.LabelFor(model => model.Amount)
+        </dt>
+
+        <dd class="disabled">
+            @Html.TextBoxFor(model => model.Amount, new { id = "txtAmount", disabled="disabled" })
+        </dd>
+    </dl>
+    <p>
+        @Html.HiddenFor(model => model.Token, new { id = "hdnToken" })
+        <div class="btn btn-default">
+            @Html.ActionLink("Process Payment", "Charge", null, new { id = "btnCharge" })
+        </div>
+    </p>
+}
+
+@section Scripts {
+    <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+        crossorigin="anonymous"></script>
+
+
+    <script type="text/javascript">
+        $('document').ready(function() {
+            Stripe.setPublishableKey('pk_test_8Fulomd8MqKMrqq5pQ7d7iEa00PvUhzo7i');
+            $('#btnCharge').on('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                Stripe.card.createToken({
+                    number: $('#txtCardNumber').val(),
+                    cvc: $('#txtCvc').val(),
+                    exp_month: $('#txtExpiryMonth').val(),
+                    exp_year: $('#txtExpiryYear').val()
+                }, stripeResponseHandler);
+            });
+            function stripeResponseHandler(status, response) {
+                var $form = $('#frmCharge');
+                if (response.error) {
+                    // Show the errors on the form
+                    alert(response.error.message);
+                } else {
+                    // response contains id and card, which contains additional card details
+                    var token = response.id;
+                    // Insert the token into the form so it gets submitted to the server
+                    $('#hdnToken').val(token);
+                    // and submit
+                    $form.get(0).submit();
+                }
+                /// private key sk_test_4lknJTkG0q14upuDDfpZO1Nl006QJSGsZF
+            }
+        });
+    </script>
+}

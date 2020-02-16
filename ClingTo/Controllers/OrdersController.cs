@@ -18,6 +18,7 @@ namespace ClingTo.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Orders
+        [Authorize(Roles = "Administrator, Customer")]
         public ActionResult Index()
         {
             if (User.IsInRole("Administrator"))

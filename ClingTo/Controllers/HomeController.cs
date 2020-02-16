@@ -33,7 +33,7 @@ namespace ClingTo.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                products = products.Where(x => x.Name.Contains(searchString)).ToList();
+                products = products.Where(x => x.Name.ToLower().Contains(searchString.ToLower())).ToList();
             }
 
             switch (sortOrder)
